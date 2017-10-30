@@ -183,6 +183,10 @@ var JiraClient = module.exports = function (config) {
         this.cookie_jar = config.cookie_jar;
     }
 
+    if (config.bearer) {
+        this.bearer = config.bearer;
+    }
+
     this.applicationProperties = new applicationProperties(this);
     this.attachment = new attachment(this);
     this.auditing = new auditing(this);
@@ -343,6 +347,13 @@ var JiraClient = module.exports = function (config) {
         if (this.cookie_jar) {
             options.jar = this.cookie_jar;
         }
+
+        if (this.bearer) {
+            if (!options.headers) {
+                options.headers = {}
+            }
+            options.headers['Authorization'] = 'Bearer ' + this.bearer;
+         }
 
         if (callback) {
             request(options, function (err, response, body) {
